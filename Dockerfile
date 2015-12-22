@@ -1,4 +1,3 @@
-# check check check
 FROM tomcat:7
 MAINTAINER pgoultiaev
 
