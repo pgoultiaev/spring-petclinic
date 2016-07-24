@@ -41,6 +41,9 @@
 
         <cobertura.version>2.7</cobertura.version>
 
+        <!-- Selenium -->
+        <selenium.version>2.53.1</selenium.version>
+
     </properties>
 
     <dependencyManagement>
@@ -267,6 +270,18 @@
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-api</artifactId>
+            <version>2.47.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-remote-driver</artifactId>
+            <version>2.47.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <!-- Maven plugin versions are mentioned in order to guarantee the build reproducibility in the long term -->
@@ -304,6 +319,9 @@
                     <includes>
                         <include>**/*Tests.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/selenium/*Tests.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -444,6 +462,52 @@
                             <execution>
                                 <goals>
                                     <goal>compile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>selenium-tests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.0</version>
+                        <configuration>
+                            <compilerArguments>
+                                <Xlint/>
+                            </compilerArguments>
+                            <verbose>true</verbose>
+                            <source>${java.version}</source>
+                            <target>${java.version}</target>
+                            <showWarnings>true</showWarnings>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.19.1</version>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <screenshotDirectory>${project.build.directory}/screenshots</screenshotDirectory>
+                            </systemPropertyVariables>
+                            <includes>
+                                <include>**/selenium/*UITests.java</include>
+                            </includes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
                                 </goals>
                             </execution>
                         </executions>
