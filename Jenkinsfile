@@ -11,16 +11,16 @@ node {
 
  // Mark the code build 'stage'....
  stage 'unit test'
- sh "\${mvnHome}/bin/mvn test"
+ sh "${mvnHome}/bin/mvn test"
 
  stage 'sonar'
- sh "\${mvnHome}/bin/mvn sonar:sonar -Dsonar.host.url=http://sonar:9000"
+ sh "${mvnHome}/bin/mvn sonar:sonar -Dsonar.host.url=http://sonar:9000"
 
  stage 'build'
- sh "\${mvnHome}/bin/mvn clean package"
+ sh "${mvnHome}/bin/mvn clean package"
 
  stage 'deploy to repo'
- sh "\${mvnHome}/bin/mvn -X -s /var/maven/settings.xml deploy:deploy-file \
+ sh "${mvnHome}/bin/mvn -X -s /var/maven/settings.xml deploy:deploy-file \
  -DgroupId=nl.somecompany \
  -DartifactId=petclinic \
  -Dversion=1.0.0-SNAPSHOT \
