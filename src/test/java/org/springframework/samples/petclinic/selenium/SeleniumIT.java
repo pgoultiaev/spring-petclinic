@@ -17,7 +17,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by pgoultiaev on 24/07/16.
  */
-public class UITests {
+public class SeleniumIT {
 
     private WebDriver driver;
 
@@ -33,14 +33,18 @@ public class UITests {
         driver = new RemoteWebDriver(gridUrl, capability);
     }
 
-    @Ignore
     @Test
-    public void find_owners_should_list_me() {
-        driver.get("http://petclinic:9966/petclinic");
+    public void titleShouldBeCorrect() {
+        driver.get("http://petclinic:8080/petclinic");
 
         assertEquals("PetClinic :: a Spring Framework demonstration", driver.getTitle());
+    }
 
-        driver.findElement(By.linkText("Find owners")).click();
+    @Test
+    public void findOwnersShouldListMe() {
+        driver.get("http://petclinic:8080/petclinic");
+
+        driver.findElement(By.xpath("//*[@title=\"find owners\"]")).click();
         driver.findElement(By.linkText("Add Owner")).click();
 
         driver.findElement(By.id("firstName")).sendKeys("Rickard");
@@ -48,19 +52,11 @@ public class UITests {
         driver.findElement(By.id("address")).sendKeys("Industrigatan 9");
         driver.findElement(By.id("city")).sendKeys("Stockholm");
         driver.findElement(By.id("telephone")).sendKeys("070776655");
-        driver.findElement(By.xpath("//button")).click();
+        driver.findElement(By.xpath("//button[@type=\"submit\"]")).click();
 
-        driver.findElement(By.partialLinkText("Find owners")).click();
+        driver.findElement(By.xpath("//*[@title=\"find owners\"]")).click();
         driver.findElement(By.xpath("//input[@id='lastName']")).sendKeys("von Essen");
-        driver.findElement(By.xpath("//button")).click();
-
-    }
-
-    @Test
-    public void titleShouldBeCorrect() {
-        driver.get("http://www.google.com");
-
-        assertThat(driver.getTitle(), is(equalTo("Google")));
+        driver.findElement(By.xpath("//button[@type=\"submit\"]")).click();
     }
 
     @After
