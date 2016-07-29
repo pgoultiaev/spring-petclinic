@@ -18,4 +18,7 @@ node {
 
     stage 'push docker image'
     sh "docker push ${dockerRegistry}/petclinic:\$(git rev-parse HEAD)"
+
+    stage 'schedule petclinic'
+    sh "/opt/bin/kubectl create -f ./petclinic.yaml"
 }
