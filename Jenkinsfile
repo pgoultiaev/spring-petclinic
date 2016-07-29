@@ -16,6 +16,7 @@ node {
     def dockerRegistry = 'registry.default.svc.appfactory.local:5000'
     sh "docker build -t ${dockerRegistry}/petclinic:\$(git rev-parse HEAD) ."
 
-    stage 'push docker image'
-    sh "docker push ${dockerRegistry}/petclinic:\$(git rev-parse HEAD)"
+    stage 'tag and push docker image'
+    sh "docker tag -f pgoultiaev/petclinic:\$(git rev-parse HEAD) ${dockerRegistry}/petclinic:latest"
+    sh "docker push ${dockerRegistry}/petclinic:latest"
 }
