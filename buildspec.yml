@@ -1,4 +1,4 @@
-version: 0.1
+version: 0.2
 
 phases:
   build:
@@ -12,4 +12,4 @@ phases:
 artifacts:
   type: zip
   files:
-    - target/spring-petclinic-1.0-SNAPSHOT.jar
+    - target/petclinic.war
