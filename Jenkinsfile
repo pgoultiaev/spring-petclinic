@@ -2,7 +2,7 @@
 pipeline {
     agent any
     stages {
-        node {
+
         stage 'Checkout' {
             steps {
                 git url: 'https://github.com/pgoultiaev/spring-petclinic.git'
@@ -28,7 +28,7 @@ pipeline {
             }
         }
 
-        stage 'build'
+        stage 'build' {
             steps {
                 sh "${mvnHome}/bin/mvn clean package"
             }
