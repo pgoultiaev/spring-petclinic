@@ -3,7 +3,7 @@ pipeline {
     agent any
     stages {
 
-        stage 'Checkout' {
+        stage('Checkout') {
             steps {
                 git url: 'https://github.com/pgoultiaev/spring-petclinic.git'
             }
@@ -16,25 +16,25 @@ pipeline {
 
 
         // Mark the code build 'stage'....
-        stage 'unit test' {
+        stage('unit test') {
             steps {
                 sh "${mvnHome}/bin/mvn test"
             }
         }
 
-        stage 'sonar' {
+        stage('sonar') {
             steps {
                 sh "${mvnHome}/bin/mvn sonar:sonar -Dsonar.host.url=http://sonar:9000"
             }
         }
 
-        stage 'build' {
+        stage('build') {
             steps {
                 sh "${mvnHome}/bin/mvn clean package"
             }
         }
 
-        stage 'deploy to repo' {
+        stage('deploy to repo') {
             steps {
                 sh "${mvnHome}/bin/mvn -X -s /var/maven/settings.xml deploy:deploy-file \
                 -DgroupId=nl.somecompany \
@@ -48,26 +48,26 @@ pipeline {
             }
         }
 
-        stage 'build docker image' {
+        stage('build docker image') {
             steps {
                 sh "sudo docker build -t pgoultiaev/petclinic:\$(git rev-parse HEAD) ."
             }
         }
 
-        stage 'UI test on docker instance' {
+        stage('UI test on docker instance') {
             steps {
                 sh "sudo docker run -d --name petclinic -p 9966:8080 --network demopipeline_prodnetwork pgoultiaev/petclinic:\$(git rev-parse HEAD)"
                 sh "${mvnHome}/bin/mvn verify -Dgrid.server.url=http://selhub:4444/wd/hub/"
             }
         }
 
-        stage 'Performance test on docker instance' {
+        stage('Performance test on docker instance') {
             steps {
                 sh "chmod +x loadtest.sh && ./loadtest.sh petclinic 8080"
             }
         }
 
-        stage 'shut down docker instance' {
+        stage('shut down docker instance') {
             steps {
                 sh "sudo docker stop petclinic && sudo docker rm petclinic"
             }
@@ -76,6 +76,7 @@ pipeline {
 
     post {
         always {
+            echo 'here be test results'
             junit "**/target/surefire-reports/TEST-*.xml"
         }
     }
