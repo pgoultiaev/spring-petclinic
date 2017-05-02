@@ -12,6 +12,7 @@ node {
  // Mark the code build 'stage'....
  stage 'unit test'
  sh "${mvnHome}/bin/mvn test"
+ step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
 
  stage 'sonar'
  sh "${mvnHome}/bin/mvn sonar:sonar -Dsonar.host.url=http://sonar:9000"
@@ -32,7 +33,7 @@ node {
 
  stage 'build docker image'
  sh "sudo docker build -t pgoultiaev/petclinic:\$(git rev-parse HEAD) ."
- 
+
  stage 'UI test on docker instance'
  sh "sudo docker run -d --name petclinic -p 9966:8080 --network demopipeline_prodnetwork pgoultiaev/petclinic:\$(git rev-parse HEAD)"
  sh "${mvnHome}/bin/mvn verify -Dgrid.server.url=http://selhub:4444/wd/hub/"
