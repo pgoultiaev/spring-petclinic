@@ -72,11 +72,11 @@ pipeline {
                 sh "sudo docker stop petclinic && sudo docker rm petclinic"
             }
         }
+    }
 
-        post {
-            always {
-                junit "**/target/surefire-reports/TEST-*.xml"
-            }
+    post {
+        always {
+            junit "**/target/surefire-reports/TEST-*.xml"
         }
     }
 }
