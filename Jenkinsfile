@@ -1,6 +1,9 @@
 #!groovy
 pipeline {
     agent any
+    tools {
+        maven 'M3'
+    }
     stages {
 
         stage('Checkout') {
@@ -12,31 +15,31 @@ pipeline {
         // Get the maven tool.
         // ** NOTE: This 'M3' maven tool must be configured
         // **       in the global configuration.
-        def mvnHome = tool 'M3'
+        def
 
 
         // Mark the code build 'stage'....
         stage('unit test') {
             steps {
-                sh "${mvnHome}/bin/mvn test"
+                sh "mvn test"
             }
         }
 
         stage('sonar') {
             steps {
-                sh "${mvnHome}/bin/mvn sonar:sonar -Dsonar.host.url=http://sonar:9000"
+                sh "mvn sonar:sonar -Dsonar.host.url=http://sonar:9000"
             }
         }
 
         stage('build') {
             steps {
-                sh "${mvnHome}/bin/mvn clean package"
+                sh "mvn clean package"
             }
         }
 
         stage('deploy to repo') {
             steps {
-                sh "${mvnHome}/bin/mvn -X -s /var/maven/settings.xml deploy:deploy-file \
+                sh "mvn -X -s /var/maven/settings.xml deploy:deploy-file \
                 -DgroupId=nl.somecompany \
                 -DartifactId=petclinic \
                 -Dversion=1.0.0-SNAPSHOT \
@@ -57,7 +60,7 @@ pipeline {
         stage('UI test on docker instance') {
             steps {
                 sh "sudo docker run -d --name petclinic -p 9966:8080 --network demopipeline_prodnetwork pgoultiaev/petclinic:\$(git rev-parse HEAD)"
-                sh "${mvnHome}/bin/mvn verify -Dgrid.server.url=http://selhub:4444/wd/hub/"
+                sh "mvn verify -Dgrid.server.url=http://selhub:4444/wd/hub/"
             }
         }
 
