@@ -12,13 +12,6 @@ pipeline {
             }
         }
 
-        // Get the maven tool.
-        // ** NOTE: This 'M3' maven tool must be configured
-        // **       in the global configuration.
-        def
-
-
-        // Mark the code build 'stage'....
         stage('unit test') {
             steps {
                 sh "mvn test"
